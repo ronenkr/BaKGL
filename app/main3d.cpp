@@ -418,6 +418,7 @@ int main(int argc, char** argv)
     });
 
     inputHandler.Bind(GLFW_KEY_BACKSPACE,   [&]{ if (root.OnKeyEvent(Gui::KeyPress{GLFW_KEY_BACKSPACE})){ ;} });
+    inputHandler.Bind(GLFW_KEY_ESCAPE,      [&]{ if (root.OnKeyEvent(Gui::KeyPress{GLFW_KEY_ESCAPE})){ ;} });
     inputHandler.BindCharacter([&](char character){ if(root.OnKeyEvent(Gui::Character{character})){ ;} });
 
     Graphics::InputHandler::BindKeyboardToWindow(window.get(), inputHandler);
@@ -492,8 +493,7 @@ int main(int argc, char** argv)
     float deltaTime = 0;
 
     glfwSetCursorPos(window.get(), width/2, height/2);
-    //glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    //glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     glEnable(GL_MULTISAMPLE);  
 
@@ -797,8 +797,7 @@ int main(int argc, char** argv)
      
         glfwSwapBuffers(window.get());
     }
-    while (glfwGetKey(window.get(), GLFW_KEY_ESCAPE) != GLFW_PRESS 
-        && glfwWindowShouldClose(window.get()) == 0);
+    while (glfwWindowShouldClose(window.get()) == 0);
 
     if (showImgui)
     {

@@ -9,6 +9,9 @@
 #include "gui/fontManager.hpp"
 #include "gui/icons.hpp"
 
+#include "com/visit.hpp"
+
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 #include <iostream>
@@ -174,6 +177,21 @@ bool MainView::OnMouseEvent(const MouseEvent& event)
     }
 
     return handled;
+}
+
+bool MainView::OnKeyEvent(const KeyEvent& event)
+{
+    return std::visit(overloaded{
+        [this](const KeyPress& p){
+            if (p.mValue == GLFW_KEY_ESCAPE)
+            {
+                mGuiManager.EnterMainMenu(true);
+                return true;
+            }
+            return false;
+        },
+        [](const auto&){ return false; }
+        }, event);
 }
 
 void MainView::UpdatePartyMembers(const BAK::GameState& gameState)

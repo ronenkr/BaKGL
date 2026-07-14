@@ -152,7 +152,7 @@ ShaderProgramHandle ShaderProgram::Compile()
     glGetProgramiv(programId, GL_LINK_STATUS, &result);
     glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-    if (infoLogLength > 0 || result == GL_FALSE)
+    if (result == GL_FALSE)
     {
         std::vector<char> programErrorMessage(infoLogLength + 1);
         glGetProgramInfoLog(programId, infoLogLength, NULL, &programErrorMessage[0]);
@@ -190,7 +190,7 @@ GLuint ShaderProgram::CompileShader(const std::string& shader, GLenum shaderType
     glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
     glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-    if (infoLogLength > 0 || result == GL_FALSE)
+    if (result == GL_FALSE)
     {
         std::vector<char> shaderErrorMessage(infoLogLength + 1);
         glGetShaderInfoLog(shaderId, infoLogLength, NULL, &shaderErrorMessage[0]);

@@ -45,6 +45,7 @@ public:
     void EnterMainMenu(bool gameRunning);
     void UpdateRestoreButton();
     [[nodiscard]] bool OnMouseEvent(const MouseEvent& event) override;
+    [[nodiscard]] bool OnKeyEvent(const KeyEvent& event) override;
     bool CanSaveBookmark() const;
     const BAK::SaveFile& SaveBookmark();
 private:

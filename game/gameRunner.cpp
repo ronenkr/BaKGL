@@ -216,7 +216,7 @@ void GameRunner::LoadSystems()
         }
         assert(name == BAK::sCatapultModelName);
         const auto frameCount = mZoneData->mZoneItems.GetModelFrameCount(name);
-        if (frameCount > 0)
+        if (frameCount)
         {
             if (mAnimatedModelFrames.find(name) == mAnimatedModelFrames.end())
             {

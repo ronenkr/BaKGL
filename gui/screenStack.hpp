@@ -19,6 +19,7 @@ public:
     ScreenStack();
     
     bool OnMouseEvent(const MouseEvent& event) override;
+    bool OnKeyEvent(const KeyEvent& event) override;
     void PushScreen(Widget* widget);
     void PopScreen();
     Widget* Top() const;

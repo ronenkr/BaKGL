@@ -55,6 +55,7 @@ public:
     void ShowInventory(BAK::ActiveCharIndex character);
     void SetCanSaveBookmark(bool can);
     [[nodiscard]] bool OnMouseEvent(const MouseEvent& event) override;
+    [[nodiscard]] bool OnKeyEvent(const KeyEvent& event) override;
 private:
     void AddChildren();
 

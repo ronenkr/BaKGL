@@ -37,6 +37,16 @@ bool ScreenStack::OnMouseEvent(const MouseEvent& event)
     return false;
 }
 
+bool ScreenStack::OnKeyEvent(const KeyEvent& event)
+{
+    if (mChildren.size() > 0)
+    {
+        if (mChildren.back()->OnKeyEvent(event))
+            return true;
+    }
+    return false;
+}
+
 void ScreenStack::PushScreen(Widget* widget)
 {
     mLogger.Debug() << "Widgets: " << GetChildren() << " Pushed widget " << std::hex << widget << std::dec << "\n";

@@ -9,6 +9,9 @@
 #include "gui/textBox.hpp"
 #include "gui/core/widget.hpp"
 
+#include "com/visit.hpp"
+
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 namespace Gui {
@@ -153,6 +156,28 @@ void MainMenuScreen::UpdateRestoreButton()
 [[nodiscard]] bool MainMenuScreen::OnMouseEvent(const MouseEvent& event)
 {
     return Widget::OnMouseEvent(event) || true;
+}
+
+[[nodiscard]] bool MainMenuScreen::OnKeyEvent(const KeyEvent& event)
+{
+    return std::visit(overloaded{
+        [this](const KeyPress& p){
+            if (p.mValue == GLFW_KEY_ESCAPE)
+            {
+                if (mState != State::MainMenu)
+                {
+                    BackToMainMenu();
+                }
+                else if (mGameRunning)
+                {
+                    EnterMainView();
+                }
+                return true;
+            }
+            return false;
+        },
+        [](const auto&){ return false; }
+        }, event) || true;
 }
 
 void MainMenuScreen::ShowPreferences()
