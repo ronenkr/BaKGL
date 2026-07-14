@@ -140,6 +140,7 @@ An example `config.json` is included in the main directory of the repo.
 
 ## Modding
 
+
 BaKGL supports replacing the original game image files with your own.
 
 ### Set up the Mod Directory
