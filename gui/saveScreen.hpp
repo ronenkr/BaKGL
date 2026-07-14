@@ -61,6 +61,7 @@ private:
     void SaveSelected(std::size_t i);
     void RefreshGui();
     void AddChildren();
+    static std::string GenerateDefaultSaveName();
 
     const Font& mFont;
     const Backgrounds& mBackgrounds;

@@ -14,6 +14,7 @@ extern "C" {
 #include "com/getopt.h"
 }
 
+#include "com/crashHandler.hpp"
 #include "com/logger.hpp"
 #include "com/path.hpp"
 #include "com/visit.hpp"
@@ -143,6 +144,7 @@ Config::Config LoadConfigFile(std::string configPath)
 
 int main(int argc, char** argv)
 {
+    Com::InstallCrashHandlers();
     const auto options = Parse(argc, argv);
     const auto config = LoadConfigFile(options.configFile);
     Logging::LogState::SetLogTime(config.mLogging.mLogTime);
@@ -193,7 +195,10 @@ int main(int argc, char** argv)
     {
         Logging::LogState::Enable(enabled);
     }
-    
+
+    try
+    {
+
     if (!config.mPaths.mGameData.empty())
     {
         Paths::Get().SetBakDirectory(config.mPaths.mGameData);
@@ -802,6 +807,27 @@ int main(int argc, char** argv)
     if (showImgui)
     {
         ImguiWrapper::Shutdown();
+    }
+
+    logger.Info() << "main3d exiting normally (window closed)" << std::endl;
+    }
+    catch (const std::exception& e)
+    {
+        logger.Fatal() << "main3d exiting due to an unhandled exception: " << e.what() << std::endl;
+        if (logFileStream && logFileStream->is_open())
+        {
+            logFileStream->close();
+        }
+        return 1;
+    }
+    catch (...)
+    {
+        logger.Fatal() << "main3d exiting due to an unhandled non-standard exception" << std::endl;
+        if (logFileStream && logFileStream->is_open())
+        {
+            logFileStream->close();
+        }
+        return 2;
     }
 
     if (logFileStream && logFileStream->is_open())

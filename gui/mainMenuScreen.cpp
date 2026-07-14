@@ -9,8 +9,6 @@
 #include "gui/textBox.hpp"
 #include "gui/core/widget.hpp"
 
-#include "com/visit.hpp"
-
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
@@ -83,10 +81,13 @@ MainMenuScreen::MainMenuScreen(
         mLayout.GetWidgetDimensions(sQuit),
         mFont,
         "#Quit to DOS",
-        [this]{ 
+        [this]{
             mGuiManager.DoFade(
                 1.0,
-                []{ std::exit(0); });
+                [this]{
+                    mLogger.Info() << "Quit to DOS selected, exiting" << std::endl;
+                    std::exit(0);
+                });
         }
     },
     mCancel{
@@ -160,24 +161,21 @@ void MainMenuScreen::UpdateRestoreButton()
 
 [[nodiscard]] bool MainMenuScreen::OnKeyEvent(const KeyEvent& event)
 {
-    return std::visit(overloaded{
-        [this](const KeyPress& p){
-            if (p.mValue == GLFW_KEY_ESCAPE)
-            {
-                if (mState != State::MainMenu)
-                {
-                    BackToMainMenu();
-                }
-                else if (mGameRunning)
-                {
-                    EnterMainView();
-                }
-                return true;
-            }
-            return false;
-        },
-        [](const auto&){ return false; }
-        }, event) || true;
+    if (const auto* p = std::get_if<KeyPress>(&event);
+        p && p->mValue == GLFW_KEY_ESCAPE)
+    {
+        if (mState != State::MainMenu)
+        {
+            BackToMainMenu();
+        }
+        else if (mGameRunning)
+        {
+            EnterMainView();
+        }
+        return true;
+    }
+
+    return Widget::OnKeyEvent(event) || true;
 }
 
 void MainMenuScreen::ShowPreferences()

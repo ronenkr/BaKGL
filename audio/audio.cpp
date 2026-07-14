@@ -5,6 +5,7 @@
 #include "com/visit.hpp"
 
 #include "SDL_mixer.h"
+#include <exception>
 #include <mutex>
 
 namespace AudioA {
@@ -72,7 +73,18 @@ AudioManager::AudioManager()
             {
                 auto sound = mSoundQueue.front();
                 mSoundQueue.pop();
-                PlaySoundImpl(sound);
+                try
+                {
+                    PlaySoundImpl(sound);
+                }
+                catch (const std::exception& e)
+                {
+                    mLogger.Error() << "Exception while playing sound " << sound << ": " << e.what() << std::endl;
+                }
+                catch (...)
+                {
+                    mLogger.Error() << "Unknown exception while playing sound " << sound << std::endl;
+                }
             }
         }
     }},

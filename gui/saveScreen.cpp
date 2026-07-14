@@ -15,8 +15,12 @@
 
 #include <glm/glm.hpp>
 
+#include <chrono>
+#include <ctime>
 #include <filesystem>
 #include <functional>
+#include <iomanip>
+#include <sstream>
 
 namespace Gui {
 
@@ -134,7 +138,6 @@ SaveScreen::SaveScreen(
 {
     mDirectoryLabel.SetText(mFont, "Directories");
     mFilesLabel.SetText(mFont, "Games");
-    mRestoreLabel.SetText(mFont, "#Restore Game");
 }
 
 bool SaveScreen::OnMouseEvent(const MouseEvent& event)
@@ -160,6 +163,7 @@ void SaveScreen::SetSaveOrLoad(bool isSave)
     mSaveManager.RefreshSaves();
 
     mIsSave = isSave;
+    mRestoreLabel.SetText(mFont, mIsSave ? "#Save Game" : "#Restore Game");
     mDirectories.SetDimensions(glm::vec2{100, mIsSave ? 90 : 108});
     mFiles.SetDimensions(glm::vec2{160, mIsSave ? 90 : 108});
 
@@ -188,7 +192,7 @@ void SaveScreen::SetSaveOrLoad(bool isSave)
     mFileSaveInput.SetText(
         (mSelectedDirectory && mSelectedSave)
             ? mSaveManager.GetSaves().at(*mSelectedDirectory).mSaves.at(*mSelectedSave).mName
-            : "");
+            : (mIsSave ? GenerateDefaultSaveName() : ""));
 
     if (mIsSave && mSelectedDirectory && !mSelectedSave)
     {
@@ -284,7 +288,7 @@ void SaveScreen::DirectorySelected(std::size_t i)
         mSaveManager.GetSaves().at(*mSelectedDirectory).mName);
     mFileSaveInput.SetText(saves.size() > 0
             ? saves.front().mName
-            : "");
+            : (mIsSave ? GenerateDefaultSaveName() : ""));
 
     mNeedRefresh = true;
     mRefreshSaves = true;
@@ -302,6 +306,15 @@ void SaveScreen::SaveSelected(std::size_t i)
     mFileSaveInput.SetText(saveName);
 
     mNeedRefresh = true;
+}
+
+std::string SaveScreen::GenerateDefaultSaveName()
+{
+    const auto now = std::time(nullptr);
+    const auto* localNow = std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(localNow, "Save %Y-%m-%d %H-%M-%S");
+    return oss.str();
 }
 
 void SaveScreen::RefreshGui()
