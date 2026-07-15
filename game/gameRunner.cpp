@@ -918,9 +918,9 @@ bool GameRunner::CannotMoveHere(BAK::GamePosition playerPos) const
                 continue;
             }
 
-            const auto itemPos = item.GetLocation();
-            const float dx = static_cast<float>(p.x) - itemPos.x;
-            const float dy = static_cast<float>(p.y) + itemPos.z;
+            const auto itemPos = item.GetBakLocation();
+            const float dx = static_cast<float>(p.x) - static_cast<float>(itemPos.x);
+            const float dy = static_cast<float>(p.y) - static_cast<float>(itemPos.y);
             candidates.push_back({&item, dx*dx + dy*dy});
         }
     }

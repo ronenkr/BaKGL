@@ -21,3 +21,9 @@ if (ENABLE_CPPTRACE)
         cpptrace::cpptrace
     )
 endif()
+
+if (MSVC)
+    target_link_libraries(com
+        Dbghelp
+    )
+endif()
